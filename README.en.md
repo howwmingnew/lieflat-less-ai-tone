@@ -2,6 +2,8 @@
 
 [中文](README.md) | English
 
+> This fork adapts the rule set and docs to Taiwanese Traditional Chinese (台灣繁體中文). It is forked from [larashero3-dotcom/lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone). All statistics come from the original Simplified Chinese corpus and have not been re-validated on Taiwanese writing. The scripts now use Traditional Chinese regexes and normalize Simplified input when the `opencc` Python package is installed.
+
 [![less-ai-tone.skill: quantifying what "AI tone" actually is, then removing it](assets/less-ai-tone-hero-en.png)](https://moxt.ai/hub?type=skill&id=lieflat-less-ai-tone)
 
 **An AI-tone removal skill grounded in a 2.83-million-character corpus study**
@@ -209,7 +211,7 @@ The rule set ships as an Agent Skill. We recommend opening [`lieflat-less-ai-ton
 It can also be installed locally:
 
 ```bash
-npx skills add larashero3-dotcom/lieflat-less-ai-tone
+npx skills add howwmingnew/lieflat-less-ai-tone
 ```
 
 Once installed, submitting text applies the rule set. `SKILL.md` also works directly as a system prompt in any tool accepting custom instructions.
