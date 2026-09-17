@@ -251,14 +251,14 @@ npx skills add howwmingnew/lieflat-less-ai-tone
 ## 7 復算
 
 ```bash
-# 句层：各特征在两侧语料的频率与比值
-python3 scripts/compare-human-ai.py --human <目录...> --ai <目录...>
+# 句層：各特徵在兩側語料的頻率與比值
+python3 scripts/compare-human-ai.py --human <目錄...> --ai <目錄...>
 
-# 段落层：相邻句同构、段首零回指
-python3 scripts/check-structure.py --human <目录...> --ai <目录...>
+# 段落層：相鄰句同構、段首零回指
+python3 scripts/check-structure.py --human <目錄...> --ai <目錄...>
 
-# 生成侧：译文句式频率
-python3 scripts/check-translationese.py <目录...>
+# 生成側：譯文句式頻率
+python3 scripts/check-translationese.py <目錄...>
 ```
 
 三個腳本僅按目錄參數讀取 `.md` 檔案，不含語料，亦不以目錄名作為輸出標籤。量測規則定義位於各腳本首部。
