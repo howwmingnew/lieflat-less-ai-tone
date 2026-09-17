@@ -262,6 +262,8 @@ python3 scripts/check-translationese.py <dirs...>
 
 All three scripts read `.md` files from directory arguments only. They contain no corpus data and do not use directory names as output labels. Operator definitions sit at the top of each script.
 
+`scripts/rerun-tw.py` runs all three against one corpus directory and collects the output into a single report: `--init` creates the directory skeleton with placement notes, then `python3 scripts/rerun-tw.py <corpus-dir>`.
+
 Substituting your own corpus recomputes every metric. If results diverge from those reported here, check first whether topic and genre are aligned across sides, and whether the denominator matches the unit being measured.
 
 ## About Moxt
