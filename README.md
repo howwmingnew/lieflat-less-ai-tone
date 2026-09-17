@@ -205,19 +205,51 @@ GPT 破折號頻率之低，曾被用於論證該特徵已失效。但 Claude �
 
 規則全文見 [SKILL.md](./SKILL.md)。
 
-### 4.1 應用
+### 4.1 安裝
 
-規則集以 Agent Skill 形式釋出。推薦直接在 [MoxtHub 開啟 `lieflat-less-ai-tone`](https://moxt.ai/zh-CN/hub?type=skill&id=lieflat-less-ai-tone)：Moxt 擁有強大的上下文空間和 AI 原生的檔案格式，方便 agent 處理長文內容。
+規則集以 Agent Skill 形式釋出。三種裝法擇一即可。
 
-也可安裝到本地：
+**裝到 Claude Code。** 這是最常見的用法，裝完對所有專案生效：
 
 ```bash
-npx skills add howwmingnew/lieflat-less-ai-tone
+npx skills add howwmingnew/lieflat-less-ai-tone -g -a claude-code -s lieflat-less-ai-tone -y
 ```
 
-安裝後提交文本即按規則集處理。亦可直接將 `SKILL.md` 作為 system prompt 使用，適配任何支援自定義指令的工具。
+檔案會落在 `~/.claude/skills/lieflat-less-ai-tone/`。只想裝在單一專案，把 `-g` 換成 `-p`，檔案會放進該專案的 `.agents/skills/` 並連結到 `.claude/skills/`。省略 `-a claude-code` 則會一併裝進系統上其他 agent 工具的目錄。
+
+裝好後確認、更新與移除：
+
+```bash
+npx skills list -g
+npx skills update lieflat-less-ai-tone
+npx skills remove lieflat-less-ai-tone
+```
+
+**手動安裝。** 把 `SKILL.md` 複製到 `~/.claude/skills/lieflat-less-ai-tone/SKILL.md`，專案層級則放在 `.claude/skills/` 底下。改寫行為只由 `SKILL.md` 決定，`scripts/` 與 `assets/` 不影響結果，不必一起複製。
+
+**不安裝。** 把 `SKILL.md` 全文當 system prompt，適用任何支援自定義指令的工具；或用 `npx skills use howwmingnew/lieflat-less-ai-tone@lieflat-less-ai-tone` 印出一次性的提示詞。
+
+也可以直接在 [MoxtHub 開啟 `lieflat-less-ai-tone`](https://moxt.ai/zh-CN/hub?type=skill&id=lieflat-less-ai-tone)：Moxt 擁有強大的上下文空間和 AI 原生的檔案格式，方便 agent 處理長文內容。該條目是原簡體版，不是本 fork。
 
 與寫作風格蒸餾配合使用時不必單獨安裝本規則集，[writing-dna-skill](https://github.com/larashero3-dotcom/writing-dna-skill) 已內建一份，裝該倉庫即隨行。二者構成先後兩道工序，前者負責風格逼近，本規則集負責清除生成痕跡。同目錄存在蒸餾產物時優先讀取 `語言DNA.md`；兩者衝突時以蒸餾產物為準，因其記錄的是目標作者的實際寫法，不屬生成痕跡。
+
+### 4.2 使用
+
+裝好之後，把檔案交給 agent 並指名這個 skill：
+
+```
+讀 draft.md，套用 lieflat-less-ai-tone 的規則改寫，輸出到 draft.tw.md，不要覆蓋原檔
+```
+
+輸出到新檔案是為了可驗收。這套規則是白名單制，只會動明確命中規則的句子，其餘逐字保留，所以改動應該逐處對得上編號規則：
+
+```bash
+diff draft.md draft.tw.md
+```
+
+`diff` 裡指不出對應規則的改動就是越界，可以要求撤銷並恢復原文——`SKILL.md` 文末的驗收清單第一條就是這個要求。要量化檢查，把改寫前後各放一個目錄，用 `scripts/check-translationese.py` 比對譯文句式標記的密度。
+
+處理 `.pptx`、`.docx` 這類非純文字檔時，流程是先把文字抽出來、改寫、再按原位置寫回。兩件事要注意：投影片與文件的版面有長度限制，改寫後長度會變，寫回前得確認沒有爆版；另外這 11 條規則是為連續散文設計的，短條列多半不會命中，真正有作用的是內文段落與備忘稿。
 
 ## 5 測量失誤記錄
 

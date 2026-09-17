@@ -204,19 +204,51 @@ Statistical significance does not imply executability. Transcribing the eleven s
 
 Full rule set in [SKILL.md](./SKILL.md).
 
-### 4.1 Application
+### 4.1 Installation
 
-The rule set ships as an Agent Skill. We recommend opening [`lieflat-less-ai-tone` directly on MoxtHub](https://moxt.ai/hub?type=skill&id=lieflat-less-ai-tone), where Moxt's large context window and AI-native file workflow make it easier for an agent to process complete long-form text.
+The rule set ships as an Agent Skill. Pick one of three installation paths.
 
-It can also be installed locally:
+**Install into Claude Code.** The common case; applies across all projects:
 
 ```bash
-npx skills add howwmingnew/lieflat-less-ai-tone
+npx skills add howwmingnew/lieflat-less-ai-tone -g -a claude-code -s lieflat-less-ai-tone -y
 ```
 
-Once installed, submitting text applies the rule set. `SKILL.md` also works directly as a system prompt in any tool accepting custom instructions.
+Files land in `~/.claude/skills/lieflat-less-ai-tone/`. For a single project, replace `-g` with `-p`: files go to that project's `.agents/skills/` and are linked into `.claude/skills/`. Omitting `-a claude-code` also installs into the directories of every other agent tool present on the system.
+
+To verify, update, or remove:
+
+```bash
+npx skills list -g
+npx skills update lieflat-less-ai-tone
+npx skills remove lieflat-less-ai-tone
+```
+
+**Manual install.** Copy `SKILL.md` to `~/.claude/skills/lieflat-less-ai-tone/SKILL.md`, or into `.claude/skills/` for project scope. Rewriting behaviour depends on `SKILL.md` alone; `scripts/` and `assets/` do not affect the output and need not be copied.
+
+**No install.** Use the full text of `SKILL.md` as a system prompt in any tool accepting custom instructions, or run `npx skills use howwmingnew/lieflat-less-ai-tone@lieflat-less-ai-tone` to print a one-off prompt.
+
+You can also open [`lieflat-less-ai-tone` on MoxtHub](https://moxt.ai/hub?type=skill&id=lieflat-less-ai-tone), where Moxt's large context window and AI-native file workflow make it easier for an agent to process complete long-form text. That entry is the original Simplified Chinese version, not this fork.
 
 When used alongside writing-style distillation there is no need to install this rule set separately; [writing-dna-skill](https://github.com/larashero3-dotcom/writing-dna-skill) bundles a copy, so installing that repository brings it along. The two form successive stages: the former approximates a target style, this rule set removes generation artifacts. Where distilled artifacts are present in the same directory, read `language-dna.md` first; where the two conflict, the artifacts take precedence, since they record how the target author actually writes and are not generation artifacts.
+
+### 4.2 Usage
+
+Once installed, hand the agent a file and name the skill:
+
+```
+Read draft.md, apply the lieflat-less-ai-tone rules, write the result to draft.clean.md, leave the original untouched
+```
+
+Writing to a new file is what makes the result checkable. The rule set is a whitelist: only sentences that match a rule are touched and everything else is preserved verbatim, so each change should map to a numbered rule:
+
+```bash
+diff draft.md draft.clean.md
+```
+
+Any change in that diff which cannot be mapped to a rule is out of scope and should be reverted — the first item on the verification checklist at the end of `SKILL.md` says exactly this. For a quantitative check, place the before and after versions in separate directories and compare translationese marker density with `scripts/check-translationese.py`.
+
+For non-plain-text files such as `.pptx` and `.docx`, extract the text, rewrite it, then write it back in place. Two caveats: slide and document layouts are length-constrained and rewriting changes length, so check for overflow before writing back; and these 11 rules are designed for continuous prose, so short bullet lines rarely match — body paragraphs and speaker notes are where the rules actually apply.
 
 ## 5 Record of measurement errors
 
